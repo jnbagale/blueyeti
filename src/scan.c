@@ -95,7 +95,6 @@ static void device_found(DBusGProxy *pobject, const char *address,
     }
     if (name != NULL) {
       logDevice(bobj->dbHandle, 
-		bobj->twitter, 
 		(char *)address, 
 		(char *)name);
     }
@@ -106,7 +105,6 @@ static void device_found(DBusGProxy *pobject, const char *address,
 
 blueyetiObject *setupService( DBusGConnection *connection, 
                               sqlite3 *db, 
-			      RestProxy *twitter,
                               gboolean verbose )
 {
 
@@ -135,7 +133,6 @@ blueyetiObject *setupService( DBusGConnection *connection,
   bobj->dbHandle = db;
   bobj->verbose = verbose;
   bobj->dbusObject = proxy;
-  bobj->twitter = twitter;
 
   // need to setup marshaller for devices found
   dbus_g_object_register_marshaller(marshal_VOID__STRING_BOXED,

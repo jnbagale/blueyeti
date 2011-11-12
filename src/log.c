@@ -14,7 +14,6 @@
 #include "scan.h"
 #include "log.h"
 #include "marshal.h"
-#include "tweet.h"
 #include "config.h"
 
 #ifdef DEBUG_MODE
@@ -48,7 +47,7 @@ void closeLog(sqlite3 *db)
 }
 
 
-int logDevice(sqlite3 *db, RestProxy *twitter, char *mac, char *name)
+int logDevice(sqlite3 *db, char *mac, char *name)
 {
   int rc; // result code
   int id; // primary key
@@ -86,16 +85,7 @@ int logDevice(sqlite3 *db, RestProxy *twitter, char *mac, char *name)
   sqlite3_finalize(stmt);
   // if no record exists
   if (id == 0) {     
-    sql = sqlite3_mprintf("insert into log (mac, name, seen) values ('%s', \"%s\", %d)", mac, name, seen);
-    // post to Twitter if proxy set
-    if (twitter) {
-      gchar *message;
-
-      message = g_strdup_printf ("saw %s with id %s #%s", 
-				 (name) ? name : "someone who didn't set their device name", mac, PROGNAME);
-      tweet(twitter, message);
-      g_free(message);
-    }
+    sql = sqlite3_mprintf("insert into log (mac, name, seen) values ('%s', \"%s\", %d)", mac, name, seen);   
   }
   else {
     sql = sqlite3_mprintf("update log set name = \"%s\", seen = %d where id = %d", name, seen, id);

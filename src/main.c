@@ -12,7 +12,6 @@
 #include <glib.h>
 #include <libsoup/soup.h>
 #include "scan.h"
-#include "tweet.h"
 #include "log.h"
 #include "marshal.h"
 
@@ -26,7 +25,7 @@ int main(int argc, char** argv)
 {
   GMainLoop *mainloop = NULL;
   GError *error = NULL;
-  RestProxy *twitter = NULL;
+  blueyetiObject *bobj = NULL;
   DBusGConnection *bus = NULL;
   GOptionContext *context;
   gboolean verbose = FALSE;
@@ -80,7 +79,7 @@ int main(int argc, char** argv)
 
 
   // create btloggerObject
-  bobj = setupService(bus, db, twitter, verbose);
+  bobj = setupService(bus, db, verbose);
   if (bobj == NULL) {
     exit(EXIT_FAILURE);  
   }

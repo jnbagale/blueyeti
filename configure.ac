@@ -7,13 +7,7 @@ AC_DEFINE([PROGNAME],["blueyeti"],["simple bluetooth"])
 
 AC_DEFINE([DB],["/var/lib/misc/btlog.db"],["default location for database"])
 
-AC_DEFINE([CONSUMER_KEY],["edit me"],["Consumer key"])
-
-AC_DEFINE([CONSUMER_SECRET],["edit me"],["Consumer secret"])
-
 AC_DEFINE([SCAN_FREQ],[20],["seconds to wait between scans"])
-
-AC_DEFINE([API_URL],["https://twitter.com/"],["RESTful API"])
 
 # --enable-debug flag
 AC_ARG_ENABLE(debug,
