@@ -1,0 +1,5 @@
+interface IServiceInterface{
+
+	void startService();
+
+}

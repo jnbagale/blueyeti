@@ -5,8 +5,18 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/lblCurrentInfo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello" />
+        android:text="@string/current_info"
+        android:textSize="20dip" />
+
+    <TextView
+        android:id="@+id/txtInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nothing to see here!" 
+        android:maxLines="20"
+        android:scrollbars="vertical"/>
 
 </LinearLayout>

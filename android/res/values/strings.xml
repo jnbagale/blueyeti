@@ -3,5 +3,8 @@
 
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">Blueyeti</string>
+    <string name="current_info">Current Information</string>
+    <string name="alert_pref">Alert Preferences</string>
+    <string name="vibrate">Vibrate</string>
 
 </resources>
