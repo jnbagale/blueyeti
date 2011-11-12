@@ -13,10 +13,9 @@
 #include <dbus/dbus-glib-lowlevel.h>
 #include <glib.h>
 #include <libsoup/soup.h>
-#include "scan.h"
 #include "log.h"
+#include "scan.h"
 #include "marshal.h"
-#include "tweet.h"
 #include "config.h"
 
 
@@ -86,7 +85,7 @@ static void device_found(DBusGProxy *pobject, const char *address,
 {
   GValue *value;
   const gchar *name;
-  btloggerObject *bobj = (btloggerObject *)user_data;
+  blueyetiObject *bobj = (blueyetiObject *)user_data;
 
   if (hash != NULL) {
     value = g_hash_table_lookup(hash, "Name");
@@ -105,13 +104,13 @@ static void device_found(DBusGProxy *pobject, const char *address,
 }
  
 
-btloggerObject *setupService( DBusGConnection *connection, 
+blueyetiObject *setupService( DBusGConnection *connection, 
                               sqlite3 *db, 
 			      RestProxy *twitter,
                               gboolean verbose )
 {
 
-  btloggerObject *bobj;
+  blueyetiObject *bobj;
   DBusGProxy *proxy;
   gchar *adapter;
     
@@ -128,8 +127,8 @@ btloggerObject *setupService( DBusGConnection *connection,
 
   g_free(adapter);
    
-  if ((bobj = (btloggerObject *)g_malloc(sizeof(btloggerObject))) == NULL) {
-    g_printerr("failed to malloc btloggerObject!");
+  if ((bobj = (blueyetiObject *)g_malloc(sizeof(blueyetiObject))) == NULL) {
+    g_printerr("failed to malloc blueyetiObject!");
     exit(EXIT_FAILURE);
   }
 
@@ -148,11 +147,11 @@ btloggerObject *setupService( DBusGConnection *connection,
   dbus_g_proxy_connect_signal(proxy, "DeviceFound",
         G_CALLBACK(device_found), bobj, NULL);
   
-  // btloggerObject
+  // blueyetiObject
   return bobj;  
 }
 
-void cleanupService(btloggerObject *bobj)
+void cleanupService(blueyetiObject *bobj)
 {
   closeLog(bobj->dbHandle);
   g_free(bobj);    

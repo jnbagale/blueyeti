@@ -1,6 +1,6 @@
 // License: GPLv3
-// Copyright 2010 John P. T. Moore
-// jmoore@zedstar.org
+// Copyright 2011 
+// 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,9 +12,11 @@
 #include <glib.h>
 #include <libsoup/soup.h>
 #include "scan.h"
+#include "tweet.h"
 #include "log.h"
 #include "marshal.h"
-#include "tweet.h"
+
+
 #include "config.h"
 
 #define log_output(fmtstr, args...) \
@@ -24,12 +26,10 @@ int main(int argc, char** argv)
 {
   GMainLoop *mainloop = NULL;
   GError *error = NULL;
-  DBusGConnection *bus = NULL;
   RestProxy *twitter = NULL;
-  btloggerObject *bobj = NULL;
+  DBusGConnection *bus = NULL;
   GOptionContext *context;
   gboolean verbose = FALSE;
-  gboolean tweet = FALSE;
   gint scan_freq = SCAN_FREQ;
   gchar *database = DB;
   sqlite3 *db;  
@@ -38,14 +38,13 @@ int main(int argc, char** argv)
   GOptionEntry entries[] = 
   {
     { "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Verbose output", NULL },
-    { "tweet", 't', 0, G_OPTION_ARG_NONE, &tweet, "Tweet results", NULL },
     { "scan frequency", 's', 0, G_OPTION_ARG_INT, &scan_freq, "Scan every N seconds", "N" },
     { "database", 'd', 0, G_OPTION_ARG_FILENAME, &database, "sqlite database", NULL },
     { NULL }
   };
 
 
-  context = g_option_context_new ("- log bluetooth devices");
+  context = g_option_context_new ("- send information over bluetooth");
   g_option_context_add_main_entries (context, entries, PACKAGE_NAME);
   
   if (!g_option_context_parse (context, &argc, &argv, &error)) {
@@ -79,10 +78,6 @@ int main(int argc, char** argv)
     exit(EXIT_FAILURE);
   }
 
-  // authenticate to twitter
-  if (tweet) {
-    twitter = authenticate(CONSUMER_KEY, CONSUMER_SECRET);
-  }
 
   // create btloggerObject
   bobj = setupService(bus, db, twitter, verbose);
@@ -93,7 +88,7 @@ int main(int argc, char** argv)
   // wait scan_freq seconds then call findDevices
   g_timeout_add((scan_freq * 1000), (GSourceFunc)findDevices, (gpointer)bobj->dbusObject);
 
-  log_output("started btlogger");
+  log_output("started blueyeti");
 
   g_main_loop_run(mainloop);
   

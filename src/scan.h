@@ -8,14 +8,14 @@ typedef struct {
   RestProxy *twitter;
   gint verbose;
   DBusGProxy *dbusObject;
-} btloggerObject;
+} blueyetiObject;
 
-btloggerObject *setupService( DBusGConnection *connection, 
+blueyetiObject *setupService( DBusGConnection *connection, 
                               sqlite3 *db, 
 			      RestProxy *twitter,
                               gboolean verbose );
                               
-void cleanupService(btloggerObject *bobj);
+void cleanupService(blueyetiObject *bobj);
 
 gboolean findDevices(DBusGProxy *obj);
 
