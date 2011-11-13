@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,9 +39,12 @@ import android.os.RemoteException;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import uk.ac.uwl.blueyeti.*;
 
 public class BluetoothService extends Service{
 	
+	
+	public ArrayList<Information> infos;
 	Context c;
 	private BluetoothServerSocket bss;
 	public BluetoothAdapter bluetooth;
@@ -76,7 +81,7 @@ public class BluetoothService extends Service{
      * @param context  The UI Activity Context
      * @param handler  A Handler to send messages back to the UI Activity
      */
-    public BluetoothChatService(Context context) {
+    public BluetoothService(Context context) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         
@@ -209,7 +214,7 @@ public class BluetoothService extends Service{
      * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
      */
-    public void write(byte[] out) {
+ /*   public void write(byte[] out) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
@@ -219,7 +224,7 @@ public class BluetoothService extends Service{
         }
         // Perform the write unsynchronized
         r.write(out);
-    }
+    } */
 
     /**
      * Indicate that the connection attempt failed and notify the UI Activity.
@@ -438,15 +443,14 @@ public class BluetoothService extends Service{
                 try {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
-
-                    // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(BluetoothChat.MESSAGE_READ, bytes, -1, buffer)
-                            .sendToTarget();
+                    parseXML(new String(buffer, 0, bytes));
+                    
+                    
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
                     // Start the service over to restart listening mode
-                    BluetoothChatService.this.start();
+                    BluetoothService.this.start();
                     break;
                 }
             }
@@ -456,7 +460,7 @@ public class BluetoothService extends Service{
          * Write to the connected OutStream.
          * @param buffer  The bytes to write
          */
-        public void write(byte[] buffer) {
+   /*     public void write(byte[] buffer) {
             try {
                 mmOutStream.write(buffer);
 
@@ -466,7 +470,7 @@ public class BluetoothService extends Service{
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }
-        }
+        } */
 
         public void cancel() {
             try {
@@ -487,18 +491,22 @@ public class BluetoothService extends Service{
 		
 		public void startService() throws RemoteException {
 			
-			startBluetoothListening();
-			notifyUser("Service has started");
+			BluetoothService.this.start();
 			
 		}
+
+		public uk.ac.uwl.blueyeti.service.Information getLastInfo()
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public List<uk.ac.uwl.blueyeti.service.Information> getAllInfo()
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	};
-
-
-
-	protected void startBluetoothListening() {
-		bss = bluetooth.listenUsingInsecureRfcommWithServiceRecord(name, uuid)
-		
-	}
 
 
 
@@ -518,19 +526,23 @@ public class BluetoothService extends Service{
 				"Service has started", when);
 		PendingIntent contentIntent = PendingIntent.getActivity(
 				BluetoothService.this, 0, i, Intent.FLAG_ACTIVITY_NEW_TASK);
-		notification.setLatestEventInfo(this, "Blueyeti",str,
+		notification.setLatestEventInfo(BluetoothService.this.c, "Blueyeti",str,
 				contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		
 	}
 	
-	protected void parseXML(String xml){
+	
+
+}
+    protected void parseXML(String xml){
 		try{
 			SAXParserFactory spf = SAXParserFactory.newInstance();
 			SAXParser sp = spf.newSAXParser();
 			XMLReader xr = sp.getXMLReader();
 			
 			Parser p = new Parser();
+			p.bts = this;
 			xr.setContentHandler(p);
 			
 			xr.parse(xml);
@@ -547,4 +559,8 @@ public class BluetoothService extends Service{
 		}
 	}
 
+	@Override
+	public IBinder onBind(Intent arg0) {
+		return null;
+	}
 }

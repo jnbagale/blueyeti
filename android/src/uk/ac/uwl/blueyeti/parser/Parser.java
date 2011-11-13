@@ -4,7 +4,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import uk.ac.uwl.blueyeti.Information;
+import uk.ac.uwl.blueyeti.service.BluetoothService;
+import uk.ac.uwl.blueyeti.service.Information;
 import android.util.Log;
 
 public class Parser extends DefaultHandler{
@@ -20,6 +21,7 @@ public class Parser extends DefaultHandler{
 	private String currentElement;
 	private String currentElementValue;
 	private Information info;
+	public  BluetoothService bts;
 	
 	@Override
     public void startDocument() throws SAXException{
@@ -43,6 +45,8 @@ public class Parser extends DefaultHandler{
     
     @Override
     public void endElement(String namespaceURI, String localName, String qName) throws SAXException{
+    	if(localName.equals(INFO))
+    		bts.infos.add(info);
     	if(localName.equals(INFO_TITLE))
     		info.setTitle(currentElementValue);
     	if(localName.equals(INFO_DESC))
