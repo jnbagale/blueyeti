@@ -15,19 +15,28 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import uk.ac.uwl.blueyeti.parser.Parser;
+import uk.ac.uwl.blueyeti.service.IServiceInterface;
+import uk.ac.uwl.blueyeti.service.Information;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.IBinder;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
     private static final int REQUEST_ENABLE_BT = 0;
 	/** Called when the activity is first created. */
 	
 	private BluetoothHelper bluetoothHelper;
+	IServiceInterface bluetoothService;
+	TextView infoTitle;
+	TextView infoDescription;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,30 +62,32 @@ public class MainActivity extends Activity {
         }
         
         bluetoothHelper.bluetooth = ba;
+        bindService(new Intent(IServiceInterface.class.getName()), mainConnection, Context.BIND_AUTO_CREATE);
         	
     }
     
-    protected void runXML(String path) {
-		try{
-			File file = new File(Environment.getExternalStorageDirectory() + path);
-			SAXParserFactory spf = SAXParserFactory.newInstance();
-			SAXParser sp = spf.newSAXParser();
-			XMLReader xr = sp.getXMLReader();
-			
-			Parser p = new Parser();
-			xr.setContentHandler(p);
-			
-			xr.parse(new InputSource(new InputStreamReader(new FileInputStream(file))));
-		} catch(MalformedURLException e){
-			e.printStackTrace();
-		} catch(ParserConfigurationException e){
-			e.printStackTrace();
-		} catch(SAXException e){
-			e.printStackTrace();
-		} catch(IOException e){
-			e.printStackTrace();
-		} catch(Exception e){
-			e.printStackTrace();
+	private ServiceConnection mainConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName className, IBinder service) {
+			try {
+				bluetoothService = IServiceInterface.Stub.asInterface(service);
+				Information info = bluetoothService.getLastInfo();
+				MainActivity.this.displayInfo(info);
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
+
+		public void onServiceDisconnected(ComponentName name) {
+			bluetoothService = null;
+			
+		}
+	};
+	protected void displayInfo(Information info) {
+		infoTitle = (TextView) findViewById(R.id.lblCurrentInfo);
+		infoDescription = (TextView) findViewById(R.id.txtInfo);
+		
+		infoTitle.setText(info.getTitle());
+		infoDescription.setText(info.getDescription());
 	}
 }
