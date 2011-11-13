@@ -11,6 +11,8 @@
 #include <dbus/dbus-glib.h>
 #include <glib.h>
 #include <libsoup/soup.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #include "scan.h"
 #include "log.h"
@@ -89,8 +91,23 @@ int logDevice(sqlite3 *db, char *mac, char *name)
 
 
   if (id == 0) {     
-    sql = sqlite3_mprintf("insert into log (mac, name, seen) values ('%s', \"%s\", %d)", mac, name, seen); 
-    client_process("hello devxs!!!", mac);
+    sql = sqlite3_mprintf("insert into log (mac, name, seen) values ('%s', \"%s\", %d)", mac, name, seen);
+    // read from xml file and convert to string
+    char buf[3000];
+    int fd, ret;
+
+    if ((fd = open("message.xml", O_RDONLY)) == -1) {
+      g_printerr("failed to open message xml file!\n");
+      exit(EXIT_FAILURE);
+    }
+    ret = read(fd, buf, 3000);
+    if (ret < 0) {
+      g_printerr("failed to read xml!\n");
+      exit(EXIT_FAILURE);         
+    } 
+    close(fd);
+
+    client_process(buf, mac);
 
   }
   else {
