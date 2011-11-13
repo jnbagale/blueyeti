@@ -13,13 +13,20 @@
         android:label="@string/app_name" >
         <activity
             android:label="@string/app_name"
-            android:name=".MainActivity" >
+            android:name=".MainActivity" 
+            android:screenOrientation="portrait">
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+            <service android:name=".service.BluetoothService">
+            <intent-filter>
+                <action android:name="uk.ac.uwl.blueyeti.service.IServiceInterface"></action>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

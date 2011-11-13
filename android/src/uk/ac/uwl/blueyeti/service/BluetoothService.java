@@ -32,6 +32,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Binder;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -63,7 +64,7 @@ public class BluetoothService extends Service{
         UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
 
     // Member fields
-    private final BluetoothAdapter mAdapter;
+    private BluetoothAdapter mAdapter;
     private AcceptThread mSecureAcceptThread;
     private AcceptThread mInsecureAcceptThread;
     private ConnectThread mConnectThread;
@@ -75,17 +76,34 @@ public class BluetoothService extends Service{
     public static final int STATE_LISTEN = 1;     // now listening for incoming connections
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
-
+    
+    
+    @Override
+	public void onCreate() {
+		if (D)
+			Log.d(TAG, "onCreate");
+		Log.v(TAG, "Starting");
+        mAdapter = BluetoothAdapter.getDefaultAdapter();
+        mState = STATE_NONE;
+    }
     /**
      * Constructor. Prepares a new BluetoothChat session.
      * @param context  The UI Activity Context
      * @param handler  A Handler to send messages back to the UI Activity
      */
-    public BluetoothService(Context context) {
-        mAdapter = BluetoothAdapter.getDefaultAdapter();
-        mState = STATE_NONE;
-        
-    }
+    
+    private final IBinder mBinder = new LocalBinder();
+
+	/**
+	 * Class for clients to access. Because we know this service always runs in
+	 * the same process as its clients, we don't need to deal with IPC.
+	 */
+	public class LocalBinder extends Binder {
+		public BluetoothService getService() {
+			return BluetoothService.this;
+		}
+	}
+	
 
     /**
      * Set the current state of the chat connection
@@ -331,6 +349,27 @@ public class BluetoothService extends Service{
             }
         }
     }
+    
+	public IServiceInterface.Stub sbinder = new IServiceInterface.Stub() {
+		
+		public void startService() throws RemoteException {
+			Log.v(TAG, "got request");
+			start();
+			
+		}
+
+		public uk.ac.uwl.blueyeti.service.Information getLastInfo()
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public List<uk.ac.uwl.blueyeti.service.Information> getAllInfo()
+				throws RemoteException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	};
 
 
     /**
@@ -480,33 +519,7 @@ public class BluetoothService extends Service{
             }
         }
 
-	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	
-	
-	public IServiceInterface.Stub sbinder = new IServiceInterface.Stub() {
-		
-		public void startService() throws RemoteException {
-			
-			BluetoothService.this.start();
-			
-		}
 
-		public uk.ac.uwl.blueyeti.service.Information getLastInfo()
-				throws RemoteException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public List<uk.ac.uwl.blueyeti.service.Information> getAllInfo()
-				throws RemoteException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-	};
 
 
 
@@ -560,7 +573,18 @@ public class BluetoothService extends Service{
 	}
 
 	@Override
-	public IBinder onBind(Intent arg0) {
-		return null;
+	public IBinder onBind(Intent intent) {
+		
+		if (D)
+			Log.d(TAG, "onBind");
+
+		if (IServiceInterface.class.getName().equals(intent.getAction())) {
+			Log.d(TAG, "bind-contextsBinder");
+			return sbinder;
+		}
+		else{
+			return null;
+		}
 	}
 }
+

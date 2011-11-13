@@ -6,5 +6,6 @@
     <string name="current_info">Current Information</string>
     <string name="alert_pref">Alert Preferences</string>
     <string name="vibrate">Vibrate</string>
+    <string name="startService">Start Service</string>
 
 </resources>
