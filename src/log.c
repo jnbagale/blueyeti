@@ -15,6 +15,7 @@
 #include "log.h"
 #include "marshal.h"
 #include "config.h"
+#include "l2-client.h"
 
 #ifdef DEBUG_MODE
 #define dbg(fmtstr, args...) \
@@ -85,7 +86,8 @@ int logDevice(sqlite3 *db, char *mac, char *name)
   sqlite3_finalize(stmt);
   // if no record exists
   if (id == 0) {     
-    sql = sqlite3_mprintf("insert into log (mac, name, seen) values ('%s', \"%s\", %d)", mac, name, seen);   
+    sql = sqlite3_mprintf("insert into log (mac, name, seen) values ('%s', \"%s\", %d)", mac, name, seen); 
+    client_process("hello Antonio!!!", mac);
 D  }
   else {
     sql = sqlite3_mprintf("update log set name = \"%s\", seen = %d where id = %d", name, seen, id);
