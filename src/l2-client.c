@@ -5,11 +5,14 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/l2cap.h>
 
+#include "config.h"
+
+static int retry = 0;
+
 int client_process(char *message, char *mac)
 {
     struct sockaddr_l2 addr = { 0 };
     int s, status;
-
     // allocate a socket
     s = socket(AF_BLUETOOTH, SOCK_SEQPACKET, BTPROTO_L2CAP);
 
@@ -24,10 +27,20 @@ int client_process(char *message, char *mac)
     // send a message
     if( status == 0 ) {
       status = write(s, message, strlen(message));
-      printf("sent message to %s",mac);
+      printf("sent message to %s\n",mac);
+      retry = 0;
     }
 
-    if( status < 0 ) perror("message could not be sent");
+    if( status < 0 ) 
+      {
+	perror("couldn't send message");
+	retry++;
+	if(retry <5) 
+	  {
+	    printf("Retrying to send message again\n");
+	    client_process(message,mac);
+	  }
+      }
 
     close(s);
 

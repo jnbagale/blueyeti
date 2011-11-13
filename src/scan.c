@@ -92,7 +92,6 @@ static void device_found(DBusGProxy *pobject, const char *address,
     name = value ? g_value_get_string(value) : NULL;
     if (bobj->verbose) { 
       log_output("address: %s name: %s", address, name);
-      g_print("logging devices\n");
 
     }
     if (name != NULL) {

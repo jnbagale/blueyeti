@@ -4,6 +4,8 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/l2cap.h>
 
+#include "config.h"
+
 int main(int argc, char **argv)
 {
     struct sockaddr_l2 loc_addr = { 0 }, rem_addr = { 0 };
