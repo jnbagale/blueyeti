@@ -397,6 +397,8 @@ public class BluetoothService extends Service{
                     tmp = device.createInsecureRfcommSocketToServiceRecord(
                             MY_UUID_INSECURE);
                 }
+                
+                Log.v(TAG, "get bluetooth socket");
             } catch (IOException e) {
                 Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e);
             }
@@ -462,6 +464,7 @@ public class BluetoothService extends Service{
 
             // Get the BluetoothSocket input and output streams
             try {
+            	Log.v(TAG, "Getting streams");
                 tmpIn = socket.getInputStream();
                 tmpOut = socket.getOutputStream();
             } catch (IOException e) {
@@ -480,8 +483,10 @@ public class BluetoothService extends Service{
             // Keep listening to the InputStream while connected
             while (true) {
                 try {
+                	Log.v(TAG, "read input stream");
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
+                    Log.v(TAG, "got message");
                     parseXML(new String(buffer, 0, bytes));
                     
                     
