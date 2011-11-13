@@ -86,7 +86,7 @@ int logDevice(sqlite3 *db, char *mac, char *name)
   // if no record exists
   if (id == 0) {     
     sql = sqlite3_mprintf("insert into log (mac, name, seen) values ('%s', \"%s\", %d)", mac, name, seen);   
-  }
+D  }
   else {
     sql = sqlite3_mprintf("update log set name = \"%s\", seen = %d where id = %d", name, seen, id);
   }
