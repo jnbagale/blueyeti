@@ -5,7 +5,7 @@ AM_CONFIG_HEADER([src/config.h])
 
 AC_DEFINE([PROGNAME],["blueyeti"],["simple bluetooth"])
 
-AC_DEFINE([DB],["/var/lib/misc/btlog.db"],["default location for database"])
+AC_DEFINE([DB],["/var/lib/misc/blueyetilog.db"],["default location for database"])
 
 AC_DEFINE([SCAN_FREQ],[20],["seconds to wait between scans"])
 
@@ -50,6 +50,9 @@ PKG_CHECK_MODULES(DBUS, [dbus-1 dbus-glib-1])
 
 # check for libsoup
 PKG_CHECK_MODULES(LIBSOUP, [libsoup-2.4])
+
+# check for bluez
+PKG_CHECK_MODULES(BLUEZ, [bluez])
 
 AC_CONFIG_FILES([Makefile src/Makefile])
 
