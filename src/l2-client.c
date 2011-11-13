@@ -18,7 +18,7 @@ int client_process(char *message, char *mac)
     // set the connection parameters (who to connect to)
     addr.l2_family = AF_BLUETOOTH;
     addr.l2_psm = htobs(0x1001);
-    str2ba( dest, &addr.l2_bdaddr );
+    str2ba( mac, &addr.l2_bdaddr );
 
     // connect to server
     status = connect(s, (struct sockaddr *)&addr, sizeof(addr));
