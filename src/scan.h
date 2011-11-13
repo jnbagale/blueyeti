@@ -1,8 +1,6 @@
 #ifndef SCAN_H_
 #define SCAN_H_
 
-#include <rest/oauth-proxy.h>
-
 typedef struct {
   sqlite3 *dbHandle;
   gint verbose;
