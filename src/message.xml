@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<protocol>
+  <choice event = "1"> 
+      <id> 1  </id>
+      <communication>
+	<type>	
+	  <ethernet> 0 </ethernet>
+	  <wifi> 1 </wifi>
+	  <slowpan> 2 </slowpan>
+	  <gsm> 3</gsm>
+	</type>
+      <mac>ffffffffffff </mac>
+      </communication>
+      <accelerometer>
+	<type>
+	  <none> 0 </none>
+	  <openmoko> 1 </openmoko>
+	  <thinkpad> 2 </thinkpad>
+	  <macbook> 3 </macbook>
+	</type>
+	<covariance> 1000 </covariance>
+	<data>
+	  <x> 500</x>
+	  <y> 500</y>
+	</data>
+      </accelerometer>
+  </choice>
+</protocol>

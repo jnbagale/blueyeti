@@ -55,7 +55,6 @@ int server_process()
 int main(int argc, char **argv)
 {
 
-  GMainLoop *mainloop = NULL;
   GError *error = NULL;
   GOptionContext *context;
   gboolean verbose = FALSE;
@@ -75,19 +74,12 @@ int main(int argc, char **argv)
     exit (EXIT_FAILURE);
   }
   
-  mainloop = g_main_loop_new(NULL, FALSE);  
-  if (mainloop == NULL) {
-    g_printerr("Couldn't create GMainLoop\n");
-    exit(EXIT_FAILURE);
-  }
+  while(1)
+    {
+      server_process();
+      g_usleep(1000);
 
-
-  // wait scan_freq seconds then call findDevices
-  g_timeout_add( 10000, (GSourceFunc)server_process, NULL);
-
-  g_main_loop_run(mainloop);
-  
-  return EXIT_FAILURE;  
+    }
 
 
   
