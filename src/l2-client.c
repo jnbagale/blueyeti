@@ -9,8 +9,6 @@ int client_process(char *message, char *mac)
 {
     struct sockaddr_l2 addr = { 0 };
     int s, status;
-    //char *message = "hello!";
-    //char dest[18] = "68:A3:C4:48:8D:8E";
 
     // allocate a socket
     s = socket(AF_BLUETOOTH, SOCK_SEQPACKET, BTPROTO_L2CAP);
@@ -26,6 +24,7 @@ int client_process(char *message, char *mac)
     // send a message
     if( status == 0 ) {
       status = write(s, message, strlen(message));
+      printf("sent message to %s",mac);
     }
 
     if( status < 0 ) perror("message could not be sent");
