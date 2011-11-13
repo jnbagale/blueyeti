@@ -98,12 +98,12 @@ int logDevice(sqlite3 *db, char *mac, char *name)
 
     if ((fd = open("message.xml", O_RDONLY)) == -1) {
       g_printerr("failed to open message xml file!\n");
-      exit(EXIT_FAILURE);
+      //exit(EXIT_FAILURE);
     }
     ret = read(fd, buf, 3000);
     if (ret < 0) {
       g_printerr("failed to read xml!\n");
-      exit(EXIT_FAILURE);         
+      //exit(EXIT_FAILURE);         
     } 
     close(fd);
 
