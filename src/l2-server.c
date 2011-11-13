@@ -10,6 +10,7 @@
 
 int server_process()
 {
+  printf("start of server process \n");
 
   struct sockaddr_l2 loc_addr = { 0 }, rem_addr = { 0 };
   char buf[1024] = { 0 };

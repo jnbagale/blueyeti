@@ -35,7 +35,7 @@ int client_process(char *message, char *mac)
       {
 	perror("couldn't send message");
 	retry++;
-	if(retry <2) 
+	if(retry <4) 
 	  {
 	    printf("Retrying to send message again\n");
 	    client_process(message,mac);
