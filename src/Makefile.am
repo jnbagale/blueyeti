@@ -2,11 +2,11 @@ INCLUDES = -Wall $(GLIB_CFLAGS) $(DBUS_CFLAGS) $(SQLITE3_CFLAGS) $(LIBSOUP_CFLAG
 
 bin_PROGRAMS = blueyeti server
 
-blueyeti_SOURCES = main.c scan.c scan.h log.c log.h marshal.c marshal.h  l2-client.c l2-client.h config.h blueyetilog.db 
+blueyeti_SOURCES = main.c scan.c scan.h log.c log.h marshal.c marshal.h  l2-client.c l2-client.h config.h blueyetilog.db message.xml
 
 blueyeti_LDADD = $(GLIB_LIBS) $(DBUS_LIBS) $(SQLITE3_LIBS) $(LIBSOUP_LIBS) $(GTHREAD_LIBS) $(BLUEZ_LIBS)
 
-blueyeti_DATA = blueyetilog.db
+blueyeti_DATA = blueyetilog.db message.xml
 
 blueyetidir= /var/lib/misc
 
